@@ -1,10 +1,11 @@
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from QLearning import QLearning
-
+from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
 
 def main():
-    environment = MatchingPenniesEnvironment()
-    nr_episodes = 10
+    #environment = MatchingPenniesEnvironment()
+    environment = PrisonersDilemmaEnvironment()
+    nr_episodes = 10000
 
     player_a = QLearning(environment)
     player_b = QLearning(environment)

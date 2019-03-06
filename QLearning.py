@@ -18,15 +18,15 @@ class QLearning:
 
     def reward(self, action, reward):
         action = int(action)
-        self.q_table[action] = self.q_table[action] + self.alpha * (reward + self.gamma * np.max(self.q_table[:] - self.q_table[action]))
+        self.q_table[action] = self.q_table[action] + \
+                               self.alpha * (reward + self.gamma * np.max(self.q_table[:] - self.q_table[action]))
 
     def action(self):
         rnd = random.random()
         if rnd > self.epsilon:
             self.epsilon -= 0.1
-            print('max'+ str(np.argmax(self.q_table[:])))
             return np.argmax(self.q_table[:])
         else:
             self.epsilon -= 0.1
-            return self.q_table[random.choice([0, 1])]
+            return random.choice([0, 1])
 

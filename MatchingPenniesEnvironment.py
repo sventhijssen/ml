@@ -7,8 +7,6 @@ class MatchingPenniesEnvironment:
         self.PlayerOneAction = 0
         self.PlayerTwoAction = 0
 
-
-
     @staticmethod
     def get_actions():
         return ['H', 'T']
@@ -21,9 +19,6 @@ class MatchingPenniesEnvironment:
 
     def get_number_of_states(self):
         return len(self.get_states())
-
-    def get_reward_even(self):
-        return
 
     def action_player_one(self,action):
         self.PlayerOneAction = action
