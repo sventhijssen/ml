@@ -6,7 +6,13 @@ class PrisonersDilemmaEnvironment:
     def __init__(self):
         self.PlayerOneAction = 0
         self.PlayerTwoAction = 0
-        self.rewardMatrix =[[[3, 3],[0, 5],[5, 0],[1, 1]]]
+        self.payoff_matrix_a = [[4, 1], [3, 3]]
+        self.payoff_matrix_b = [[4, 3], [1, 3]]
+
+    def get_payoff_matrix(self, player):
+        if player == 0:
+            return self.payoff_matrix_a
+        return self.payoff_matrix_b
 
     @staticmethod
     def get_actions():

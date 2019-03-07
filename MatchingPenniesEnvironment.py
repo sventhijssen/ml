@@ -6,6 +6,13 @@ class MatchingPenniesEnvironment:
     def __init__(self):
         self.PlayerOneAction = 0
         self.PlayerTwoAction = 0
+        self.payoff_matrix_a = [[1, 0], [0, 1]]
+        self.payoff_matrix_b = [[0, 1], [1, 0]]
+
+    def get_payoff_matrix(self, player):
+        if player == 0:
+            return self.payoff_matrix_a
+        return self.payoff_matrix_b
 
     @staticmethod
     def get_actions():

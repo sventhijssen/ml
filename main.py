@@ -1,9 +1,22 @@
+from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from QLearning import QLearning
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
 
+import numpy as np
+import matplotlib.pylab as plt
+from scipy.integrate import odeint
+from scipy.misc import derivative
+
+from pylab import *
+from numpy import ma
+
+
+def system(vect, t):
+    x, y = vect
+    return [x - y - x * (x ** 2 + 5 * y ** 2), x + y - y * (x ** 2 + y ** 2)]
+
 def main():
-    #environment = MatchingPenniesEnvironment()
     environment = PrisonersDilemmaEnvironment()
     nr_episodes = 10000
 
@@ -19,6 +32,20 @@ def main():
         print(player_a.q_table)
         print(player_b.q_table)
 
+
+    # DYNAMICS
+    dynamics = Dynamics(environment)
+
+    # https://stackoverflow.com/questions/1843194/plotting-vector-fields-in-python-matplotlib
+
+    # arange(start, stop, step)
+    xs_mesh, ys_mesh = meshgrid(arange(0, 1, .2), arange(0, 1, .2))
+    U = dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0)
+    V = dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1)
+
+    figure()
+    quiver(U, V)
+    show()
 
 
 if __name__ == "__main__":
