@@ -6,8 +6,8 @@ class PrisonersDilemmaEnvironment:
     def __init__(self):
         self.PlayerOneAction = 0
         self.PlayerTwoAction = 0
-        self.payoff_matrix_a = [[4, 1], [3, 3]]
-        self.payoff_matrix_b = [[4, 3], [1, 3]]
+        self.payoff_matrix_a = [[3, 0], [5, 1]]
+        self.payoff_matrix_b = [[3, 5], [0, 1]]
 
     def get_payoff_matrix(self, player):
         if player == 0:

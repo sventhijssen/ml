@@ -1,23 +1,13 @@
+from matplotlib.pyplot import show, subplots
+from numpy import meshgrid, array, arange
+
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from QLearning import QLearning
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
 
-import numpy as np
-import matplotlib.pylab as plt
-from scipy.integrate import odeint
-from scipy.misc import derivative
-
-from pylab import *
-from numpy import ma
-
-
-def system(vect, t):
-    x, y = vect
-    return [x - y - x * (x ** 2 + 5 * y ** 2), x + y - y * (x ** 2 + y ** 2)]
-
 def main():
-    environment = PrisonersDilemmaEnvironment()
+    environment = MatchingPenniesEnvironment()
     # nr_episodes = 10000
     #
     # player_a = QLearning(environment)
@@ -39,14 +29,14 @@ def main():
     # https://stackoverflow.com/questions/1843194/plotting-vector-fields-in-python-matplotlib
 
     # arange(start, stop, step)
-    xs_mesh, ys_mesh = meshgrid(arange(0, 1, .2), arange(0, 1, .2))
-    us = dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0)
-    vs = dynamics.get_mesh_dynamics(ys_mesh, xs_mesh, 1)
+    xs_mesh, ys_mesh = meshgrid(arange(0, 1.1, .1), arange(0, 1.1, .1))
 
-    fig, ax = plt.subplots()
+    us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
+    vs = array(dynamics.get_mesh_dynamics(ys_mesh, xs_mesh, 1))
+
+    fig, ax = subplots()
     ax.quiver(xs_mesh, ys_mesh, us, vs)
     show()
-
 
 if __name__ == "__main__":
     main()

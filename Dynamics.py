@@ -7,16 +7,19 @@ class Dynamics:
         self.environment = environment
 
     def get_change(self, x, y, player):
+        print("(" + str(x) + ", " + str(y) + ")")
         x_vec = np.array([x, 1-x])
         y_vec = np.array([y, 1-y])
         payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
         a = np.dot(x_vec, payoff_matrix)
         c = np.dot(a, np.transpose(y_vec))
         b = payoff_matrix[0][0] * y_vec[0] + payoff_matrix[0][1] * y_vec[1]
-        return x_vec[0]*(b - c)
+        r = x_vec[0]*(b - c)
+        print(r)
+        return r
 
     def get_dynamics(self, xs, ys, player):
-        return [self.get_change(x, y, player) for x in xs for y in ys]
+        return [self.get_change(xs[i], ys[i], player) for i in range(len(ys))]
 
     def get_mesh_dynamics(self, xs_mesh, ys_mesh, player):
         """
@@ -27,4 +30,4 @@ class Dynamics:
         :param player: Integer. Indicates the player.
         :return:
         """
-        return [self.get_dynamics(xs, ys, player) for xs in xs_mesh for ys in ys_mesh]
+        return [self.get_dynamics(xs_mesh[i], ys_mesh[i], player) for i in range(len(xs_mesh))]
