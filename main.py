@@ -8,7 +8,7 @@ from Player import Player
 
 
 def independent_learning(environment):
-    nr_episodes = 100
+    nr_episodes = 1000
 
     player_one = Player()
     player_two = Player()

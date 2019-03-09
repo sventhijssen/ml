@@ -12,7 +12,7 @@ class Player:
 
     def update_q_table(self, action, reward):
         self.visits[action] += 1
-        self.q_table[action] += (1/(1+self.visits[action])) * reward
+        self.q_table[action] += (1/(1+self.visits[action])) * (reward - self.q_table[action])
 
     def get_action(self, k):
         rnd = random.random()
