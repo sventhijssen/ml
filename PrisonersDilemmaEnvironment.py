@@ -1,11 +1,8 @@
-from itertools import product
-
-
 class PrisonersDilemmaEnvironment:
 
     def __init__(self):
-        self.PlayerOneAction = 0
-        self.PlayerTwoAction = 0
+        self.action_player_one = 0
+        self.action_player_two = 0
         self.payoff_matrix_a = [[3, 0], [5, 1]]
         self.payoff_matrix_b = [[3, 5], [0, 1]]
 
@@ -14,46 +11,20 @@ class PrisonersDilemmaEnvironment:
             return self.payoff_matrix_a
         return self.payoff_matrix_b
 
-    @staticmethod
-    def get_actions():
-        return ['C', 'D']
+    def set_action_player_one(self, action):
+        self.action_player_one = action
 
-    def get_number_of_actions(self):
-        return len(self.get_actions())
+    def set_action_player_two(self, action):
+        self.action_player_two = action
 
-    def get_states(self):
-        return list(product(self.get_actions(), self.get_actions()))
+    def get_action_player_one(self):
+        return self.action_player_one
 
-    def get_number_of_states(self):
-        return len(self.get_states())
+    def get_action_player_two(self):
+        return self.action_player_two
 
-    def get_reward_even(self):
-        return
+    def get_reward_player_one(self):
+        return self.payoff_matrix_a[self.action_player_one][self.action_player_two]
 
-    def action_player_one(self,action):
-        self.PlayerOneAction = action
-
-    def  action_player_two(self,action):
-        self.PlayerTwoAction = action
-
-    #player one is the even player
-    def reward_player_one(self):
-        if(self.PlayerOneAction == self.PlayerTwoAction & self.PlayerOneAction == 0):
-            return 3
-        if (self.PlayerOneAction == self.PlayerTwoAction & self.PlayerOneAction == 1):
-            return 1
-        if (self.PlayerOneAction != self.PlayerTwoAction & self.PlayerOneAction == 0):
-            return 0
-        if (self.PlayerOneAction != self.PlayerTwoAction & self.PlayerOneAction == 1):
-            return 5
-
-    #player two is the uneven player
-    def reward_player_two(self):
-        if(self.PlayerOneAction == self.PlayerTwoAction & self.PlayerTwoAction == 0):
-            return 3
-        if (self.PlayerOneAction == self.PlayerTwoAction & self.PlayerTwoAction == 1):
-            return 1
-        if (self.PlayerOneAction != self.PlayerTwoAction & self.PlayerTwoAction == 0):
-            return 0
-        if (self.PlayerOneAction != self.PlayerTwoAction & self.PlayerTwoAction == 1):
-            return 5
+    def get_reward_player_two(self):
+        return self.payoff_matrix_b[self.action_player_one][self.action_player_two]

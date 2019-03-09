@@ -1,28 +1,30 @@
-from matplotlib.pyplot import show, subplots
+from matplotlib.pyplot import show, subplots, axis, contour
 from numpy import meshgrid, array, arange
 
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
-from QLearning import QLearning
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
-
-def main():
-    environment = MatchingPenniesEnvironment()
-    # nr_episodes = 10000
-    #
-    # player_a = QLearning(environment)
-    # player_b = QLearning(environment)
-    # for ep in range(nr_episodes):
-    #     environment.action_player_one(player_a.action())
-    #     environment.action_player_two(player_b.action())
-    #
-    #     player_a.reward(environment.PlayerOneAction, environment.reward_player_one())
-    #     player_b.reward(environment.PlayerTwoAction, environment.reward_player_two())
-    #
-    #     print(player_a.q_table)
-    #     print(player_b.q_table)
+from Player import Player
 
 
+def independent_learning(environment):
+    nr_episodes = 100
+
+    player_one = Player()
+    player_two = Player()
+
+    for k in range(nr_episodes):
+        environment.set_action_player_one(player_one.get_action(k))
+        environment.set_action_player_two(player_two.get_action(k))
+
+        player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
+        player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
+
+    print(player_one.q_table)
+    print(player_two.q_table)
+
+
+def dynamics_learning(environment):
     # DYNAMICS
     dynamics = Dynamics(environment)
 
@@ -33,10 +35,25 @@ def main():
 
     us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
     vs = array(dynamics.get_mesh_dynamics(ys_mesh, xs_mesh, 1))
+    zs_mesh = ys_mesh - xs_mesh
 
     fig, ax = subplots()
     ax.quiver(xs_mesh, ys_mesh, us, vs)
+    contour(xs_mesh, ys_mesh, zs_mesh, [0.5, 1.0, 1.2, 1.5], colors='k', linestyles = 'solid')
     show()
+
+
+def main():
+    print("Matching Pennies Environment")
+    mpe = MatchingPenniesEnvironment()
+    independent_learning(mpe)
+    # dynamics_learning(mpe)
+
+    print("Prisoner's Dilemma Environment")
+    pde = PrisonersDilemmaEnvironment()
+    independent_learning(pde)
+    # dynamics_learning(pde)
+
 
 if __name__ == "__main__":
     main()
