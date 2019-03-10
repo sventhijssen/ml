@@ -50,30 +50,56 @@ def main():
     print("Matching Pennies Environment")
     player_one = zeros(2)
     player_two = zeros(2)
+    choice_one = zeros(2)
+    choice_two = zeros(2)
     for i in range(n):
         mpe = MatchingPenniesEnvironment()
         a, b = independent_learning(mpe)
+        if a[0] > a[1]:
+            choice_one[0] += 1
+        else:
+            choice_one[1] += 1
+        if b[0] > b[1]:
+            choice_two[0] += 1
+        else:
+            choice_two[1] += 1
         player_one += a
         player_two += b
     player_one.dot(1/n)
     player_two.dot(1/n)
     print(player_one)
     print(player_two)
+    print("Number of final choices (highest q-value is picked)")
+    print(choice_one)
+    print(choice_two)
     mpe = MatchingPenniesEnvironment()
     dynamics_learning(mpe)
 
     print("Prisoner's Dilemma Environment")
     player_one = zeros(2)
     player_two = zeros(2)
+    choice_one = zeros(2)
+    choice_two = zeros(2)
     for i in range(n):
         pde = PrisonersDilemmaEnvironment()
         a, b = independent_learning(pde)
+        if a[0] > a[1]:
+            choice_one[0] += 1
+        else:
+            choice_one[1] += 1
+        if b[0] > b[1]:
+            choice_two[0] += 1
+        else:
+            choice_two[1] += 1
         player_one += a
         player_two += b
     player_one.dot(1/n)
     player_two.dot(1/n)
     print(player_one)
     print(player_two)
+    print("Number of final choices (highest q-value is picked)")
+    print(choice_one)
+    print(choice_two)
     pde = PrisonersDilemmaEnvironment()
     dynamics_learning(pde)
 
