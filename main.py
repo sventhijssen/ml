@@ -1,5 +1,5 @@
 from matplotlib.pyplot import show, subplots, axis, savefig
-from numpy import meshgrid, array, arange
+from numpy import meshgrid, array, arange, zeros, matrix
 
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
@@ -8,7 +8,7 @@ from Player import Player
 
 
 def independent_learning(environment):
-    nr_episodes = 10000
+    nr_episodes = 1000
 
     player_one = Player()
     player_two = Player()
@@ -20,8 +20,7 @@ def independent_learning(environment):
         player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
         player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
 
-    print(player_one.q_table)
-    print(player_two.q_table)
+    return player_one.get_q_table(), player_two.get_q_table()
 
 
 def dynamics_learning(environment):
@@ -47,14 +46,35 @@ def dynamics_learning(environment):
 
 
 def main():
+    n = 100
     print("Matching Pennies Environment")
+    player_one = zeros(2)
+    player_two = zeros(2)
+    for i in range(n):
+        mpe = MatchingPenniesEnvironment()
+        a, b = independent_learning(mpe)
+        player_one += a
+        player_two += b
+    player_one.dot(1/n)
+    player_two.dot(1/n)
+    print(player_one)
+    print(player_two)
     mpe = MatchingPenniesEnvironment()
-    # independent_learning(mpe)
     dynamics_learning(mpe)
 
     print("Prisoner's Dilemma Environment")
+    player_one = zeros(2)
+    player_two = zeros(2)
+    for i in range(n):
+        pde = PrisonersDilemmaEnvironment()
+        a, b = independent_learning(pde)
+        player_one += a
+        player_two += b
+    player_one.dot(1/n)
+    player_two.dot(1/n)
+    print(player_one)
+    print(player_two)
     pde = PrisonersDilemmaEnvironment()
-    # independent_learning(pde)
     dynamics_learning(pde)
 
 

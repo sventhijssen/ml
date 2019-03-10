@@ -14,6 +14,9 @@ class Player:
         self.visits[action] += 1
         self.q_table[action] += (1/(1+self.visits[action])) * (reward - self.q_table[action])
 
+    def get_q_table(self):
+        return self.q_table
+
     def get_action(self, k):
         rnd = random.random()
         if rnd > self.epsilon/(k+1):
