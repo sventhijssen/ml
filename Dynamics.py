@@ -8,14 +8,22 @@ class Dynamics:
 
     def get_change(self, x, y, player):
         # print("(" + str(x) + ", " + str(y) + ")")
-        x_vec = np.array([x, 1-x])
-        y_vec = np.array([y, 1-y])
-        payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
-        a = np.dot(x_vec, payoff_matrix)
-        c = np.dot(a, np.transpose(y_vec))
-        b = payoff_matrix[0][0] * y_vec[0] + payoff_matrix[0][1] * y_vec[1]
-        r = x_vec[0]*(b - c)
-        # print(r)
+        if player == 0:
+            x_vec = np.array([x, 1-x])
+            y_vec = np.array([y, 1-y])
+            payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
+            a = np.dot(x_vec, payoff_matrix)
+            c = np.dot(a, np.transpose(y_vec))
+            b = payoff_matrix[0][0] * y_vec[0] + payoff_matrix[0][1] * y_vec[1]
+            r = x_vec[0]*(b - c)
+        else:
+            x_vec = np.array([x, 1-x])
+            y_vec = np.array([y, 1-y])
+            payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
+            a = np.dot(x_vec, payoff_matrix)
+            c = np.dot(a, np.transpose(y_vec))
+            b = x_vec[0] * payoff_matrix[0][0] + x_vec[1] * payoff_matrix[1][0]
+            r = y_vec[0]*(b - c)
         return r
 
     def get_dynamics(self, xs, ys, player):

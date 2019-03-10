@@ -6,6 +6,10 @@ class PrisonersDilemmaEnvironment:
         self.payoff_matrix_a = [[3, 0], [5, 1]]
         self.payoff_matrix_b = [[3, 5], [0, 1]]
 
+    @staticmethod
+    def get_name():
+        return "prisoners_dilemma"
+
     def get_payoff_matrix(self, player):
         if player == 0:
             return self.payoff_matrix_a

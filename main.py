@@ -1,4 +1,4 @@
-from matplotlib.pyplot import show, subplots, axis, contour
+from matplotlib.pyplot import show, subplots, axis, savefig
 from numpy import meshgrid, array, arange
 
 from Dynamics import Dynamics
@@ -8,7 +8,7 @@ from Player import Player
 
 
 def independent_learning(environment):
-    nr_episodes = 1000
+    nr_episodes = 10000
 
     player_one = Player()
     player_two = Player()
@@ -31,28 +31,31 @@ def dynamics_learning(environment):
     # https://stackoverflow.com/questions/1843194/plotting-vector-fields-in-python-matplotlib
 
     # arange(start, stop, step)
-    xs_mesh, ys_mesh = meshgrid(arange(0, 1.1, .1), arange(0, 1.1, .1))
+    xs_mesh, ys_mesh = meshgrid(arange(0, 1.05, .1), arange(0, 1.05, .1))
 
     us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
-    vs = array(dynamics.get_mesh_dynamics(ys_mesh, xs_mesh, 1))
+    vs = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1))
     zs_mesh = ys_mesh - xs_mesh
 
     fig, ax = subplots()
     ax.quiver(xs_mesh, ys_mesh, us, vs)
-    contour(xs_mesh, ys_mesh, zs_mesh, [0.5, 1.0, 1.2, 1.5], colors='k', linestyles = 'solid')
-    show()
+    axis('equal')
+    # contour(xs_mesh, ys_mesh, zs_mesh, [0.5, 1.0, 1.2, 1.5], colors='k', linestyles = 'solid')
+    # show()
+
+    savefig(environment.get_name())
 
 
 def main():
     print("Matching Pennies Environment")
     mpe = MatchingPenniesEnvironment()
-    independent_learning(mpe)
-    # dynamics_learning(mpe)
+    # independent_learning(mpe)
+    dynamics_learning(mpe)
 
     print("Prisoner's Dilemma Environment")
     pde = PrisonersDilemmaEnvironment()
-    independent_learning(pde)
-    # dynamics_learning(pde)
+    # independent_learning(pde)
+    dynamics_learning(pde)
 
 
 if __name__ == "__main__":
