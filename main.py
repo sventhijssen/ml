@@ -45,6 +45,7 @@ def dynamics_learning(environment):
 
     savefig(environment.get_name())
 
+
 def trajectory_learning(environment):
     nr_episodes = 10000
 
@@ -128,7 +129,7 @@ def main():
     #print("Number of final choices (highest q-value is picked)")
     #print(choice_one)
     #print(choice_two)
-    pde = MatchingPenniesEnvironment()
+    pde = PrisonersDilemmaEnvironment()
     dynamics_learning(pde)
     trajectory_learning(pde)
 
