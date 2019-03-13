@@ -128,7 +128,7 @@ def main():
     #print("Number of final choices (highest q-value is picked)")
     #print(choice_one)
     #print(choice_two)
-    pde = PrisonersDilemmaEnvironment()
+    pde = MatchingPenniesEnvironment()
     dynamics_learning(pde)
     trajectory_learning(pde)
 

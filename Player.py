@@ -25,10 +25,12 @@ class Player:
             return random.choice([0, 1])
 
     def get_probability_action(self,action,k):
-        prob = (1-self.epsilon/(k+1))*0.5
-        if self.q_table[action] > self.q_table[self.other_action(action)]:
-            prob += (self.epsilon/(k+1))
-        return prob
+        temp = 0.5
+        return (np.exp(self.q_table[action]/temp))/(np.exp(self.q_table[0]/temp) + np.exp(self.q_table[1]/temp))
+        # prob = (1-self.epsilon/(k+1))*0.5
+        # if self.q_table[action] > self.q_table[self.other_action(action)]:
+        #     prob += (self.epsilon/(k+1))
+        # return prob
 
     def other_action(self,action):
         if action == 0:
