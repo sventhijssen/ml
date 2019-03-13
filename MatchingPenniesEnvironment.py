@@ -3,12 +3,16 @@ class MatchingPenniesEnvironment:
     def __init__(self):
         self.action_player_one = 0
         self.action_player_two = 0
-        self.payoff_matrix_a = [[0, 1], [1, 0]]
-        self.payoff_matrix_b = [[1, 0], [0, 1]]
+        self.payoff_matrix_a = [[1, 0], [0, 1]]
+        self.payoff_matrix_b = [[0, 1], [1, 0]]
 
     @staticmethod
     def get_name():
         return "matching_pennies"
+
+    @staticmethod
+    def get_first_action_name():
+        return "Heads"
 
     def get_payoff_matrix(self, player):
         if player == 0:

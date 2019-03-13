@@ -17,6 +17,9 @@ class Player:
     def get_q_table(self):
         return self.q_table
 
+    def set_q_table(self, q_table):
+        self.q_table = q_table
+
     def get_action(self, k):
         rnd = random.random()
         if rnd < self.get_probability_action(0, k):
@@ -28,7 +31,7 @@ class Player:
         #     return random.choice([0, 1])
 
     def get_probability_action(self,action,k):
-        temp = 0.5
+        temp = 0.2
         return (np.exp(self.q_table[action]/temp))/(np.exp(self.q_table[0]/temp) + np.exp(self.q_table[1]/temp))
         # prob = (1-self.epsilon/(k+1))*0.5
         # if self.q_table[action] > self.q_table[self.other_action(action)]:

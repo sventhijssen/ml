@@ -9,7 +9,7 @@ import pylab as p
 
 
 def independent_learning(environment):
-    nr_episodes = 10000
+    nr_episodes = 1000000
 
     player_one = Player()
     player_two = Player()
@@ -40,35 +40,43 @@ def dynamics_learning(environment):
     fig, ax = subplots()
     ax.quiver(xs_mesh, ys_mesh, us, vs)
     axis('equal')
-    # contour(xs_mesh, ys_mesh, zs_mesh, [0.5, 1.0, 1.2, 1.5], colors='k', linestyles = 'solid')
-    # show()
 
-    savefig(environment.get_name())
+    savefig(environment.get_name() + "_field")
 
 
 def trajectory_learning(environment):
-    nr_episodes = 10000
+    nr_episodes = 100000
 
-    player_one = Player()
-    player_two = Player()
-    prob_one = []
-    prob_two = []
-
-    for k in range(nr_episodes):
-        environment.set_action_player_one(player_one.get_action(k))
-        environment.set_action_player_two(player_two.get_action(k))
-
-        player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
-        player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
-
-        prob_one.append(player_one.get_probability_action(0, k))
-        prob_two.append(player_two.get_probability_action(0, k))
-
+    pairs = [(0,0 ), (0,1), (1,0), (1,1), (0.1, 0.9), (0.34, 0.72), (0.8, 0.12)] # (0.20, 0.80), (0.40, 0.80), (0.60, 0.80), (0.80,0.20), (0.80, 0.40), (0.80, 0.20)]
     f = p.figure()
-    p.plot(prob_one[:], prob_two[:])
-    f.savefig("traj")
+    p.axis([0,1,0,1])
 
-    return player_one.get_q_table(), player_two.get_q_table()
+    pairs_one = [(0.1,0.9),(0.2,0.8),(0.3,0.7),(0.4,0.6),(0.5,0.5),(0.6,0.4),(0.7,0.3),(0.8,0.2),(0.9,0.1),(0,0),(0,1),(1,0)]
+    pairs_two = pairs_one
+
+    for i in range(len(pairs_one)):
+        player_one = Player()
+        player_two = Player()
+        player_one.set_q_table([pairs_one[i][0], pairs_one[i][1]])
+        player_two.set_q_table([pairs_two[i][0], pairs_two[i][1]])
+        prob_one = []
+        prob_two = []
+
+        for k in range(nr_episodes):
+            environment.set_action_player_one(player_one.get_action(k))
+            environment.set_action_player_two(player_two.get_action(k))
+
+            player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
+            player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
+
+            prob_one.append(player_one.get_probability_action(0, k))
+            prob_two.append(player_two.get_probability_action(0, k))
+
+        p.plot(prob_one[:], prob_two[:], color='black')
+    p.xlabel('Player 1, probability of playing ' + environment.get_first_action_name())
+    p.ylabel('Player 2, probability of playing ' + environment.get_first_action_name())
+    f.savefig(environment.get_name() + "_trajectory")
+
 
 def main():
     n = 100
@@ -97,8 +105,9 @@ def main():
     #print("Number of final choices (highest q-value is picked)")
     #print(choice_one)
     #print(choice_two)
-    #mpe = MatchingPenniesEnvironment()
-    #dynamics_learning(mpe)
+    mpe = MatchingPenniesEnvironment()
+    dynamics_learning(mpe)
+    trajectory_learning(mpe)
 
     print("Prisoner's Dilemma Environment")
     #player_one = zeros(2)

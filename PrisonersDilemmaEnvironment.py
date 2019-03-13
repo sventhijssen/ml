@@ -10,6 +10,10 @@ class PrisonersDilemmaEnvironment:
     def get_name():
         return "prisoners_dilemma"
 
+    @staticmethod
+    def get_first_action_name():
+        return "Cooperate"
+
     def get_payoff_matrix(self, player):
         if player == 0:
             return self.payoff_matrix_a
