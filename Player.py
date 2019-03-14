@@ -2,7 +2,9 @@ import random
 
 import numpy as np
 
-
+"""
+The Q-Learning algorithm using the Boltzmann action selection mechanism.
+"""
 class Player:
 
     def __init__(self):

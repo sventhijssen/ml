@@ -1,3 +1,6 @@
+"""
+The matching pennies environment.
+"""
 class MatchingPenniesEnvironment:
 
     def __init__(self):

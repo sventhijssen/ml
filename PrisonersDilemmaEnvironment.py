@@ -1,3 +1,6 @@
+"""
+The prisoner's dilemma environment.
+"""
 class PrisonersDilemmaEnvironment:
 
     def __init__(self):
