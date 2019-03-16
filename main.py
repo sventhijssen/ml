@@ -48,18 +48,14 @@ def dynamics_learning(environment):
 
 
 def trajectory_learning(environment):
-    pairs = [(0,0 ), (0,1), (1,0), (1,1), (0.1, 0.9), (0.34, 0.72), (0.8, 0.12)] # (0.20, 0.80), (0.40, 0.80), (0.60, 0.80), (0.80,0.20), (0.80, 0.40), (0.80, 0.20)]
     f = p.figure()
     p.axis([0, 1, 0, 1])
 
-    pairs_one = [(0.1,0.9),(0.2,0.8),(0.3,0.7),(0.4,0.6),(0.5,0.5),(0.6,0.4),(0.7,0.3),(0.8,0.2),(0.9,0.1),(0,0),(0,1),(1,0)]
-    pairs_two = pairs_one
-
-    for i in range(len(pairs_one)):
+    for i in range(len(environment.starting_points)):
         player_one = Player()
         player_two = Player()
-        player_one.set_q_table([pairs_one[i][0], pairs_one[i][1]])
-        player_two.set_q_table([pairs_two[i][0], pairs_two[i][1]])
+        player_one.set_q_table([environment.starting_points[i][0], environment.starting_points[i][1]])
+        player_two.set_q_table([environment.starting_points_two[i][0], environment.starting_points_two[i][1]])
 
         q_table_two, q_table_two, prob_one, prob_two\
             = independent_learning(environment, player_one, player_two)

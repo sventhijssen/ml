@@ -8,6 +8,8 @@ class MatchingPenniesEnvironment:
         self.action_player_two = 0
         self.payoff_matrix_a = [[1, 0], [0, 1]]
         self.payoff_matrix_b = [[0, 1], [1, 0]]
+        self.starting_points = [(0.1,0.9),(0.2,0.8),(0.3,0.7),(0.4,0.6),(0.5,0.5),(0.6,0.4),(0.7,0.3),(0.8,0.2),(0.9,0.1),(0,0),(0,1),(1,0)]
+        self.starting_points_two = self.starting_points
 
     @staticmethod
     def get_name():

@@ -8,6 +8,8 @@ class PrisonersDilemmaEnvironment:
         self.action_player_two = 0
         self.payoff_matrix_a = [[3, 0], [5, 1]]
         self.payoff_matrix_b = [[3, 5], [0, 1]]
+        self.starting_points = [(0,0),(0.2,0.1),(0.1,0.2),(0.3,0.1),(0.1,0.3),(0.35,0.0),(0.0,0.35)]
+        self.starting_points_two = [(0,0),(0.1,0.2),(0.2,0.1),(0.1,0.3),(0.3,0.1),(0.0,0.35),(0.35,0.0)]
 
     @staticmethod
     def get_name():
