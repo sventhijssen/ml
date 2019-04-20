@@ -11,16 +11,16 @@ class Dynamics:
     def get_change(self, x, y, player):
         # print("(" + str(x) + ", " + str(y) + ")")
         if player == 0:
-            x_vec = np.array([x, (1-x)/2, (1-x)/2])
-            y_vec = np.array([y, (1-y)/2, (1-y)/2])
+            x_vec = np.array([x, 1-x])
+            y_vec = np.array([y, 1-y])
             payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
             a = np.dot(x_vec, payoff_matrix)
             c = np.dot(a, np.transpose(y_vec))
             b = np.dot(payoff_matrix, np.transpose(y_vec))[0]
             r = x_vec[0]*(b - c)
         else:
-            x_vec = np.array([x, (1-x)/2, (1-x)/2])
-            y_vec = np.array([y, (1-y)/2, (1-y)/2])
+            x_vec = np.array([x, 1-x])
+            y_vec = np.array([y, 1-y])
             payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
             a = np.dot(x_vec, payoff_matrix)
             c = np.dot(a, np.transpose(y_vec))

@@ -67,16 +67,36 @@ def dynamics_learning_ternary(environment):
             if x + y <= 1:
                 strategies.append((x, y, z))
 
-    for s in strategies:
-        print(s)
+    print(len(strategies))
+
+    combs = []
+    for xs in strategies:
+        for ys in strategies:
+            combs.append((xs, ys))
+
+    print(len(combs))
+
+    results = dynamics.get_dynamics(combs)
+
+
+    #trial and error :/
+    plot_results = []
+    for i in range(0, len(results), len(strategies)):
+        plot_results.append(array(list((map(lambda k: k+0.5, results[i])))))
 
     #TODO: make combinations for the same strategies for player A and player B
 
     figure, tax = ternary.figure()
-    #figure.set_size_inches(10, 10)
-    # Plot a few different styles with a legend
-    #points = random_points(30, scale=scale)
     tax.scatter(strategies, marker='s', color='red', label="Red Squares")
+    tax.plot(plot_results, linewidth=2.0, label="Curve")
+
+    # that is a lot!
+    tax.scatter(results, marker='s', color='blue')
+
+    # we should not plot as scatter, but as curve
+    #still rubbish results
+    tax.plot(results, linewidth=2.0, label="Curve")
+
     tax.show()
 
 
