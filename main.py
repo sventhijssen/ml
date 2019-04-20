@@ -1,6 +1,6 @@
 import ternary
 from matplotlib.pyplot import show, subplots, axis, savefig, figure
-from numpy import meshgrid, array, arange, zeros, matrix
+from numpy import meshgrid, array, arange, zeros, matrix, linspace
 
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
@@ -57,35 +57,57 @@ def dynamics_learning_ternary(environment):
 
     # https://stackoverflow.com/questions/1843194/plotting-vector-fields-in-python-matplotlib
 
-    # arange(start, stop, step)
-    xs_mesh, ys_mesh = meshgrid(3, 3)
+    strategies = []
 
-    us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
-    #vs = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1))
-    # zs_mesh = ys_mesh - xs_mesh
+    for x_i in range(0, 11):
+        for y_i in range(0, 11):
+            x = x_i/10
+            y = y_i/10
+            z = (10-x_i-y_i)/10
+            if x + y <= 1:
+                strategies.append((x, y, z))
 
-    # fig, ax = subplots()
-    # ax.quiver(xs_mesh, ys_mesh, us, vs)
-    # axis('equal')
-    #
-    # savefig(environment.get_name() + "_field")
+    for s in strategies:
+        print(s)
 
-    ## Sample trajectory plot
-    figure, tax = ternary.figure(scale=1.0)
-    figure.set_size_inches(5, 5)
-
-    tax.boundary()
-    tax.gridlines(multiple=0.2, color="black")
-    tax.set_title("Plotting of sample trajectory data", fontsize=10)
-
-    # Plot the data
-    tax.plot(us, linewidth=2.0, label="Curve")
-    tax.ticks(axis='lbr', multiple=0.2, linewidth=1, tick_formats="%.1f", offset=0.02)
-
-    tax.get_axes().axis('off')
-    tax.clear_matplotlib_ticks()
-    tax.legend()
+    figure, tax = ternary.figure()
+    #figure.set_size_inches(10, 10)
+    # Plot a few different styles with a legend
+    #points = random_points(30, scale=scale)
+    tax.scatter(strategies, marker='s', color='red', label="Red Squares")
     tax.show()
+
+
+
+    # # arange(start, stop, step)
+    # xs_mesh, ys_mesh = meshgrid(3, 3)
+    #
+    # us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
+    # #vs = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1))
+    # # zs_mesh = ys_mesh - xs_mesh
+    #
+    # # fig, ax = subplots()
+    # # ax.quiver(xs_mesh, ys_mesh, us, vs)
+    # # axis('equal')
+    # #
+    # # savefig(environment.get_name() + "_field")
+    #
+    # ## Sample trajectory plot
+    # figure, tax = ternary.figure(scale=1.0)
+    # figure.set_size_inches(5, 5)
+    #
+    # tax.boundary()
+    # tax.gridlines(multiple=0.2, color="black")
+    # tax.set_title("Plotting of sample trajectory data", fontsize=10)
+    #
+    # # Plot the data
+    # tax.plot(us, linewidth=2.0, label="Curve")
+    # tax.ticks(axis='lbr', multiple=0.2, linewidth=1, tick_formats="%.1f", offset=0.02)
+    #
+    # tax.get_axes().axis('off')
+    # tax.clear_matplotlib_ticks()
+    # tax.legend()
+    # tax.show()
 
 
 def trajectory_learning(environment):
