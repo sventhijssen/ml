@@ -70,6 +70,8 @@ def dynamics_learning_ternary(environment):
     for s in strategies:
         print(s)
 
+    #TODO: make combinations for the same strategies for player A and player B
+
     figure, tax = ternary.figure()
     #figure.set_size_inches(10, 10)
     # Plot a few different styles with a legend
