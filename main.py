@@ -69,28 +69,42 @@ def dynamics_learning_ternary(environment):
 
     print(len(strategies))
 
-    combs = []
-    for xs in strategies:
-        for ys in strategies:
-            combs.append((xs, ys))
+    # combs = []
+    # for xs in strategies:
+    #     for ys in strategies:
+    #         combs.append((xs, ys))
 
-    combs = []
+    combs = [[0.8, 0.1, 0.1]]
     for xs in strategies:
-        combs.append((xs, [1/3, 1/3, 1/3]))
+        combs.append((xs, [0.8, 0.1, 0.1]))
 
     print(len(combs))
 
-    results = dynamics.get_dynamics(combs)
+    y = [0.1, 0.4, 0.5]
+
+    xs = [array([0.8, 0.1, 0.1])]
+    ys = [array([0.4, 0.4, 0.2])]
+
+    for i in range(100):
+        x = dynamics.get_change(xs[i], ys[i], 0)
+        y = dynamics.get_change(xs[i], ys[i], 1)
+        x = array(list((map(lambda k: k+1/3, x))))
+        y = array(list((map(lambda k: k+1/3, y))))
+        xs.append(x)
+        ys.append(y)
+
+    for j in xs:
+        print(j)
 
     #trial and error :/
-    plot_results = []
-    for i in range(0, len(results)):
-        print(results[i])
-        plot_results.append(array(list((map(lambda k: k+1/3, results[i])))))
-
-    print("------------")
-    for j in range(len(plot_results)):
-        print(plot_results[j])
+    # plot_results = []
+    # for i in range(0, len(results)):
+    #     print(results[i])
+    #     plot_results.append(array(list((map(lambda k: k+1/3, results[i])))))
+    #
+    # print("------------")
+    # for j in range(len(plot_results)):
+    #     print(plot_results[j])
 
     #TODO: make combinations for the same strategies for player A and player B
 
@@ -98,7 +112,8 @@ def dynamics_learning_ternary(environment):
     figure, tax = ternary.figure(ax)
     tax.scatter(strategies, marker='s', color='red', label="Red Squares")
     #tax.plot(plot_results, linewidth=2.0, label="Curve")
-    tax.scatter(plot_results, marker='s', color='blue', label="Blue Squares")
+    #tax.scatter(plot_results, marker='s', color='blue', label="Blue Squares")
+    tax.scatter(xs, marker='s', color='blue', label="Blue Squares")
     #X, Y = meshgrid(xs_mesh, xs_mesh)
     #ax.streamplot(X, Y, array(results), array(results))
 
