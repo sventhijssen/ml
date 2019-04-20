@@ -13,7 +13,7 @@ from TernaryDynamics import TernaryDynamics
 
 
 def independent_learning(environment, player_one, player_two):
-    nr_episodes = 10000
+    nr_episodes = 100000
 
     prob_one = []
     prob_two = []
