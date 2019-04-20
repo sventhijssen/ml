@@ -10,10 +10,10 @@ class RockPaperScissorsEnvironment:
         self.payoff_matrix_a = [[0, -1, 1],
                                 [1, 0, -1],
                                 [-1, 1, 0]]
-        self.payoff_matrix_b = [[0, -1, 1],
-                                [1, 0, -1],
-                                [-1, 1, 0]]
-        self.starting_points = [(0.1,0.9),(0.2,0.8),(0.3,0.7),(0.4,0.6),(0.5,0.5),(0.6,0.4),(0.7,0.3),(0.8,0.2),(0.9,0.1),(0,0),(0,1),(1,0)]
+        self.payoff_matrix_b = [[0, 1, -1],
+                                [-1, 0, 1],
+                                [1, -1, 0]]
+        self.starting_points = [(0.6, 0.2, 0.2), (0.2, 0.6, 0.2), (0.2, 0.2, 0.6)]#, (0.3, 0.1, 0.6), (0.4, 0.1, 0.5), (0.5, 0.1, 0.4), (0.6, 0.1, 0.3), (0.7, 0.1, 0.2), (0.8, 0.1, 0.1), (0.9, 0.1, 0)]
         self.starting_points_two = self.starting_points
 
     @staticmethod
@@ -22,7 +22,7 @@ class RockPaperScissorsEnvironment:
 
     @staticmethod
     def get_first_action_name():
-        return "Heads"
+        return "Rock"
 
     def get_payoff_matrix(self, player):
         if player == 0:

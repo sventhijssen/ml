@@ -13,7 +13,7 @@ from TernaryDynamics import TernaryDynamics
 
 
 def independent_learning(environment, player_one, player_two):
-    nr_episodes = 100000
+    nr_episodes = 10000
 
     prob_one = []
     prob_two = []
@@ -25,8 +25,16 @@ def independent_learning(environment, player_one, player_two):
         player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
         player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
 
-        prob_one.append(player_one.get_probability_action(0, k))
-        prob_two.append(player_two.get_probability_action(0, k))
+        prob_one.append(
+            [player_one.get_probability_action(0, k),
+             player_one.get_probability_action(1, k),
+             player_one.get_probability_action(2, k)]
+        )
+        prob_two.append(
+            [player_two.get_probability_action(0, k),
+             player_two.get_probability_action(1, k),
+             player_two.get_probability_action(2, k)]
+        )
 
     return player_one.get_q_table(), player_two.get_q_table(), prob_one, prob_two
 
@@ -80,10 +88,8 @@ def dynamics_learning_ternary(environment):
 
     print(len(combs))
 
-    y = [0.1, 0.4, 0.5]
-
-    xs = [array([0.8, 0.1, 0.1])]
-    ys = [array([0.4, 0.4, 0.2])]
+    xs = [array([0.1, 0.1, 0.8])]
+    ys = [array([0.1, 0.6, 0.3])]
 
     for i in range(100):
         x = dynamics.get_change(xs[i], ys[i], 0)
@@ -108,12 +114,12 @@ def dynamics_learning_ternary(environment):
 
     #TODO: make combinations for the same strategies for player A and player B
 
-    f, ax = subplots()
-    figure, tax = ternary.figure(ax)
+    figure, tax = ternary.figure()
     tax.scatter(strategies, marker='s', color='red', label="Red Squares")
     #tax.plot(plot_results, linewidth=2.0, label="Curve")
     #tax.scatter(plot_results, marker='s', color='blue', label="Blue Squares")
-    tax.scatter(xs, marker='s', color='blue', label="Blue Squares")
+    tax.plot(xs, marker='s', color='blue', label="Player X")
+    tax.plot(ys, marker='s', color='red', label="Player Y")
     #X, Y = meshgrid(xs_mesh, xs_mesh)
     #ax.streamplot(X, Y, array(results), array(results))
 
@@ -160,22 +166,26 @@ def dynamics_learning_ternary(environment):
 
 
 def trajectory_learning(environment):
-    f = p.figure()
-    p.axis([0, 1, 0, 1])
-
+    # f = p.figure()
+    # p.axis([0, 1, 0, 1])
+    figure, tax = ternary.figure()
     for i in range(len(environment.starting_points)):
-        player_one = Player()
-        player_two = Player()
-        player_one.set_q_table([environment.starting_points[i][0], environment.starting_points[i][1]])
-        player_two.set_q_table([environment.starting_points_two[i][0], environment.starting_points_two[i][1]])
+        player_one = Player(3)
+        player_two = Player(3)
+        player_one.set_q_table([environment.starting_points[i][0], environment.starting_points[i][1], environment.starting_points[i][2]])
+        player_two.set_q_table([environment.starting_points_two[i][0], environment.starting_points_two[i][1], environment.starting_points_two[i][2]])
 
         q_table_two, q_table_two, prob_one, prob_two\
             = independent_learning(environment, player_one, player_two)
-        p.plot(prob_one[:], prob_two[:], color='black')
+        # p.plot(prob_one[:], prob_two[:], color='black')
+        tax.plot(prob_one[:], linewidth=2.0, label="Curve")
 
-    p.xlabel('Player 1, probability of playing ' + environment.get_first_action_name())
-    p.ylabel('Player 2, probability of playing ' + environment.get_first_action_name())
-    f.savefig(environment.get_name() + "_trajectory")
+    # p.xlabel('Player 1, probability of playing ' + environment.get_first_action_name())
+    # p.ylabel('Player 2, probability of playing ' + environment.get_first_action_name())
+    # f.savefig(environment.get_name() + "_trajectory")
+    tax.boundary()
+    tax.show()
+    #figure.savefig(environment.get_name() + "_trajectory")
 
 
 def main():
@@ -192,8 +202,8 @@ def main():
 
     print("Rock Paper Scissors Environment")
     rpse = RockPaperScissorsEnvironment()
-    dynamics_learning_ternary(rpse)
-    #trajectory_learning(rpse)
+    #dynamics_learning_ternary(rpse)
+    trajectory_learning(rpse)
 
 
 if __name__ == "__main__":
