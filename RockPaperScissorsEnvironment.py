@@ -7,9 +7,9 @@ class RockPaperScissorsEnvironment:
     def __init__(self):
         self.action_player_one = 0
         self.action_player_two = 0
-        self.payoff_matrix_a = [[0, 1, -1],
-                                [-1, 1, 0],
-                                [1, -1, 0]]
+        self.payoff_matrix_a = [[0, -1, 1],
+                                [1, 0, -1],
+                                [-1, 1, 0]]
         self.payoff_matrix_b = [[0, -1, 1],
                                 [1, 0, -1],
                                 [-1, 1, 0]]
