@@ -1,6 +1,6 @@
 import ternary
 from matplotlib.pyplot import show, subplots, axis, savefig, figure, plot as plt
-from numpy import meshgrid, array, arange, zeros, matrix, linspace
+from numpy import meshgrid, array, arange, zeros, matrix, linspace, any
 import math
 import matplotlib.pyplot as plt
 
@@ -61,6 +61,12 @@ def dynamics_learning(environment):
     savefig(environment.get_name() + "_field")
 
 
+def to2d(s):
+    if not any(s):
+        return s
+    return 0.5*((s[0]+2*s[2])/(s[0]+s[1]+s[2])), (math.sqrt(3)/2)*((s[0])/(s[0]+s[1]+s[2]))
+
+
 def dynamics_learning_ternary(environment):
     # DYNAMICS
     dynamics = TernaryDynamics(environment)
@@ -77,16 +83,29 @@ def dynamics_learning_ternary(environment):
             if x + y <= 1:
                 strategies.append((x, y, z))
 
-    print(len(strategies))
+    results = []
+    for s in strategies:
+        results.append(dynamics.get_change(s))
+
+    print(len(results))
 
     xs_mesh = []
     ys_mesh = []
-    for strat in strategies:
-        xs_mesh.append(0.5*((strat[0]+2*strat[2])/(strat[0]+strat[1]+strat[2])))
-        ys_mesh.append((math.sqrt(3)/2)*((strat[0])/(strat[0]+strat[1]+strat[2])))
+    for s in strategies:
+        x, y = to2d(s)
+        xs_mesh.append(x)
+        ys_mesh.append(y)
 
-    fig = plt.figure
-    plt.plot(xs_mesh,ys_mesh)
+    us = []
+    vs = []
+    for r in results:
+        us.append(to2d(r)[0])
+        vs.append(to2d(r)[1])
+
+    fig, ax = subplots()
+    ax.quiver(xs_mesh, ys_mesh, us, vs)
+    axis('equal')
+    fig.show()
 
 
     #us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
@@ -104,25 +123,25 @@ def dynamics_learning_ternary(environment):
     #     for ys in strategies:
     #         combs.append((xs, ys))
 
-    combs = [[0.8, 0.1, 0.1]]
-    for xs in strategies:
-        combs.append((xs, [0.8, 0.1, 0.1]))
-
-    print(len(combs))
-
-    xs = [array([0.1, 0.1, 0.8])]
-    ys = [array([0.1, 0.6, 0.3])]
-
-    for i in range(100):
-        x = dynamics.get_change(xs[i], ys[i], 0)
-        y = dynamics.get_change(xs[i], ys[i], 1)
-        x = array(list((map(lambda k: k+1/3, x))))
-        y = array(list((map(lambda k: k+1/3, y))))
-        xs.append(x)
-        ys.append(y)
-
-    for j in xs:
-        print(j)
+    # combs = [[0.8, 0.1, 0.1]]
+    # for xs in strategies:
+    #     combs.append((xs, [0.8, 0.1, 0.1]))
+    #
+    # print(len(combs))
+    #
+    # xs = [array([0.1, 0.1, 0.8])]
+    # ys = [array([0.1, 0.6, 0.3])]
+    #
+    # for i in range(100):
+    #     x = dynamics.get_change(xs[i], ys[i], 0)
+    #     y = dynamics.get_change(xs[i], ys[i], 1)
+    #     x = array(list((map(lambda k: k+1/3, x))))
+    #     y = array(list((map(lambda k: k+1/3, y))))
+    #     xs.append(x)
+    #     ys.append(y)
+    #
+    # for j in xs:
+    #     print(j)
 
 
 
@@ -142,8 +161,8 @@ def dynamics_learning_ternary(environment):
     tax.scatter(strategies, marker='s', color='red', label="Red Squares")
     #tax.plot(plot_results, linewidth=2.0, label="Curve")
     #tax.scatter(plot_results, marker='s', color='blue', label="Blue Squares")
-    tax.plot(xs, marker='s', color='blue', label="Player X")
-    tax.plot(ys, marker='s', color='red', label="Player Y")
+    # tax.plot(xs, marker='s', color='blue', label="Player X")
+    # tax.plot(ys, marker='s', color='red', label="Player Y")
     #X, Y = meshgrid(xs_mesh, xs_mesh)
     #ax.streamplot(X, Y, array(results), array(results))
 
