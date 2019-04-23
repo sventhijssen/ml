@@ -1,6 +1,8 @@
 import ternary
-from matplotlib.pyplot import show, subplots, axis, savefig, figure
+from matplotlib.pyplot import show, subplots, axis, savefig, figure, plot as plt
 from numpy import meshgrid, array, arange, zeros, matrix, linspace
+import math
+import matplotlib.pyplot as plt
 
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
@@ -77,6 +79,26 @@ def dynamics_learning_ternary(environment):
 
     print(len(strategies))
 
+    xs_mesh = []
+    ys_mesh = []
+    for strat in strategies:
+        xs_mesh.append(0.5*((strat[0]+2*strat[2])/(strat[0]+strat[1]+strat[2])))
+        ys_mesh.append((math.sqrt(3)/2)*((strat[0])/(strat[0]+strat[1]+strat[2])))
+
+    fig = plt.figure
+    plt.plot(xs_mesh,ys_mesh)
+
+
+    #us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
+    #vs = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1))
+    #zs_mesh = ys_mesh - xs_mesh
+
+    #fig, ax = subplots()
+    #ax.quiver(xs_mesh, ys_mesh, us, vs)
+    #axis('equal')
+
+    #savefig(environment.get_name() + "_field")
+
     # combs = []
     # for xs in strategies:
     #     for ys in strategies:
@@ -101,6 +123,8 @@ def dynamics_learning_ternary(environment):
 
     for j in xs:
         print(j)
+
+
 
     #trial and error :/
     # plot_results = []
@@ -202,7 +226,7 @@ def main():
 
     print("Rock Paper Scissors Environment")
     rpse = RockPaperScissorsEnvironment()
-    #dynamics_learning_ternary(rpse)
+    dynamics_learning_ternary(rpse)
     trajectory_learning(rpse)
 
 

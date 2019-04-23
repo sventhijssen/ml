@@ -32,3 +32,14 @@ class TernaryDynamics:
 
     def get_dynamics(self, combs):
         return [self.get_change(combs[i][0], combs[i][1]) for i in range(len(combs))]
+
+    def get_mesh_dynamics(self, xs_mesh, ys_mesh, player):
+        """
+        Returns the dynamics for the given populations of the different players.
+        xs represents the population of the first player. ys represents the population of the second player.
+        :param xs_mesh: An array of arrays. Each array contains the x1-values. The complementary population x2 = 1-x1.
+        :param ys_mesh: An array of arrays. Each array contains the y1-values. The complementary population y2 = 1-y1.
+        :param player: Integer. Indicates the player.
+        :return:
+        """
+        return [self.get_dynamics(xs_mesh[i], ys_mesh[i], player) for i in range(len(xs_mesh))]
