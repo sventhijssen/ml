@@ -66,6 +66,13 @@ def to2d(s):
         return s
     return 0.5*((s[0]+2*s[2])/(s[0]+s[1]+s[2])), (math.sqrt(3)/2)*((s[0])/(s[0]+s[1]+s[2]))
 
+#transform barycentric coordinates to cartesian coordinates
+def tocart(s):
+    #the three triangle vertices (top, left and right)
+    r_1=[0.5,1]
+    r_2=[0,0]
+    r_3=[1,0]
+    return s[0]*0.5+s[1]*0+s[2]*1 , s[0]*1+s[1]*0+s[2]*0
 
 def dynamics_learning_ternary(environment):
     # DYNAMICS
@@ -74,7 +81,6 @@ def dynamics_learning_ternary(environment):
     # https://stackoverflow.com/questions/1843194/plotting-vector-fields-in-python-matplotlib
 
     strategies = []
-
     for x_i in range(0, 11):
         for y_i in range(0, 11):
             x = x_i/10
@@ -85,75 +91,30 @@ def dynamics_learning_ternary(environment):
 
     results = []
     for s in strategies:
-        results.append(dynamics.get_change(s))
+        change = dynamics.get_change(s)
+        results.append(change)
 
     print(len(results))
 
     xs_mesh = []
     ys_mesh = []
     for s in strategies:
-        x, y = to2d(s)
+        x, y = tocart(s)
         xs_mesh.append(x)
         ys_mesh.append(y)
 
     us = []
     vs = []
     for r in results:
-        us.append(to2d(r)[0])
-        vs.append(to2d(r)[1])
+        us.append(tocart(r)[0])
+        vs.append(tocart(r)[1])
 
     fig, ax = subplots()
     ax.quiver(xs_mesh, ys_mesh, us, vs)
     axis('equal')
     fig.show()
 
-
-    #us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
-    #vs = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1))
-    #zs_mesh = ys_mesh - xs_mesh
-
-    #fig, ax = subplots()
-    #ax.quiver(xs_mesh, ys_mesh, us, vs)
-    #axis('equal')
-
-    #savefig(environment.get_name() + "_field")
-
-    # combs = []
-    # for xs in strategies:
-    #     for ys in strategies:
-    #         combs.append((xs, ys))
-
-    # combs = [[0.8, 0.1, 0.1]]
-    # for xs in strategies:
-    #     combs.append((xs, [0.8, 0.1, 0.1]))
-    #
-    # print(len(combs))
-    #
-    # xs = [array([0.1, 0.1, 0.8])]
-    # ys = [array([0.1, 0.6, 0.3])]
-    #
-    # for i in range(100):
-    #     x = dynamics.get_change(xs[i], ys[i], 0)
-    #     y = dynamics.get_change(xs[i], ys[i], 1)
-    #     x = array(list((map(lambda k: k+1/3, x))))
-    #     y = array(list((map(lambda k: k+1/3, y))))
-    #     xs.append(x)
-    #     ys.append(y)
-    #
-    # for j in xs:
-    #     print(j)
-
-
-
-    #trial and error :/
-    # plot_results = []
-    # for i in range(0, len(results)):
-    #     print(results[i])
-    #     plot_results.append(array(list((map(lambda k: k+1/3, results[i])))))
-    #
-    # print("------------")
-    # for j in range(len(plot_results)):
-    #     print(plot_results[j])
+    savefig(environment.get_name() + "_field")
 
     #TODO: make combinations for the same strategies for player A and player B
 
