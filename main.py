@@ -199,6 +199,11 @@ def fictitious_play(environment):
 
     nr_stages = 10000
 
+    # initial strategy is [1,0,0] for both players
+
+    prob_one = []
+    prob_two = []
+
     for k in range(nr_stages):
         action_player_one = player_one.get_action(environment.get_payoff_matrix(0))
         action_player_two = player_two.get_action(environment.get_payoff_matrix(0))
@@ -206,8 +211,18 @@ def fictitious_play(environment):
         player_one.set_action(action_player_two)
         player_two.set_action(action_player_one)
 
+        prob_one.append(player_one.get_probabilities())
+        prob_two.append(player_two.get_probabilities())
+
     print(player_one.get_probabilities())
     print(player_two.get_probabilities())
+
+    figure, tax = ternary.figure()
+    tax.plot(prob_one[:], linewidth=2.0, label="Curve")
+
+    tax.boundary()
+    tax.show()
+    figure.savefig(environment.get_name() + "_fictitious_trajectory")
 
 
 def main():
