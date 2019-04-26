@@ -5,6 +5,7 @@ import math
 import matplotlib.pyplot as plt
 
 from Dynamics import Dynamics
+from FictitiousPlayer import FictitiousPlayer
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
 from Player import Player
@@ -189,7 +190,24 @@ def trajectory_learning(environment):
     # f.savefig(environment.get_name() + "_trajectory")
     tax.boundary()
     tax.show()
-    #figure.savefig(environment.get_name() + "_trajectory")
+    figure.savefig(environment.get_name() + "_trajectory")
+
+
+def fictitious_play(environment):
+    player_one = FictitiousPlayer()
+    player_two = FictitiousPlayer()
+
+    nr_stages = 10000
+
+    for k in range(nr_stages):
+        action_player_one = player_one.get_action(environment.get_payoff_matrix(0))
+        action_player_two = player_two.get_action(environment.get_payoff_matrix(0))
+
+        player_one.set_action(action_player_two)
+        player_two.set_action(action_player_one)
+
+    print(player_one.get_probabilities())
+    print(player_two.get_probabilities())
 
 
 def main():
@@ -206,8 +224,9 @@ def main():
 
     print("Rock Paper Scissors Environment")
     rpse = RockPaperScissorsEnvironment()
-    dynamics_learning_ternary(rpse)
-    trajectory_learning(rpse)
+    #dynamics_learning_ternary(rpse)
+    #trajectory_learning(rpse)
+    fictitious_play(rpse)
 
 
 if __name__ == "__main__":
