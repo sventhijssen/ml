@@ -1,6 +1,7 @@
 from matplotlib.pyplot import show, subplots, axis, savefig, figure
 from numpy import meshgrid, array, arange, zeros, matrix
 
+from DQNPlayer import DQNPlayer
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
@@ -64,6 +65,45 @@ def trajectory_learning(environment):
     p.xlabel('Player 1, probability of playing ' + environment.get_first_action_name())
     p.ylabel('Player 2, probability of playing ' + environment.get_first_action_name())
     f.savefig(environment.get_name() + "_trajectory")
+
+
+def opponent_modelling(environment):
+    # prob_one = []
+    # prob_two = []
+    #
+    # for k in range(nr_episodes):
+    #     environment.set_action_player_one(player_one.get_action(k))
+    #     environment.set_action_player_two(player_two.get_action(k))
+    #
+    #     player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
+    #     player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
+    #
+    #     prob_one.append(player_one.get_probability_action(0, k))
+    #     prob_two.append(player_two.get_probability_action(0, k))
+    #
+    # return player_one.get_q_table(), player_two.get_q_table(), prob_one, prob_two
+
+    nr_episodes = 1000
+
+    player_one = DQNPlayer()
+    player_two = DQNPlayer()
+
+    for k in range(nr_episodes):
+        action_one = player_one.get_action()  # TODO: Convert vector to number, e.g. [0, 0, 1] -> 2
+        action_two = player_two.get_action()
+
+        environment.set_action_player_one(action_one)
+        environment.set_action_player_two(action_two)
+
+        reward_one = environment.get_reward_player_one()
+        reward_two = environment.get_reward_player_two()
+
+        player_one.update_replay_memory(action_one, reward_one)
+        player_two.update_replay_memory(action_two, reward_two)
+
+
+
+
 
 
 def main():

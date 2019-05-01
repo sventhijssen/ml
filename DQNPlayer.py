@@ -1,8 +1,17 @@
+from collections import namedtuple
 from random import random
 
 import torch
 import torch.nn as nn
 from tensorflow import zeros
+
+##########
+# README #
+##########
+# Based on:
+# - https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
+# - https://neuro.cs.ut.ee/demystifying-deep-reinforcement-learning/
+# - https://www.practicalai.io/teaching-a-neural-network-to-play-a-game-with-q-learning/
 
 
 class Net(nn.Module):
@@ -19,6 +28,32 @@ class Net(nn.Module):
         return out
 
 
+# Source: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
+# Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
+Transition = namedtuple('Transition', ('action', 'reward'))
+
+
+class ReplayMemory(object):
+
+    def __init__(self, capacity):
+        self.capacity = capacity
+        self.memory = []
+        self.position = 0
+
+    def push(self, *args):
+        """Saves a transition."""
+        if len(self.memory) < self.capacity:
+            self.memory.append(None)
+        self.memory[self.position] = Transition(*args)
+        self.position = (self.position + 1) % self.capacity
+
+    def sample(self, batch_size):
+        return random.sample(self.memory, batch_size)
+
+    def __len__(self):
+        return len(self.memory)
+
+
 class DQNPlayer:
     def __init__(self, nr_actions=3):
         self.actions = []  # Create vectors for the actions
@@ -30,6 +65,18 @@ class DQNPlayer:
         self.nr_actions = nr_actions
         self.net = Net(nr_actions, nr_actions, 1)
         self.epsilon = 0.1
+        self.replay_memory_size = 100
+        self.replay_memory = ReplayMemory(self.replay_memory_size)
+        self.batch_size = 20
+
+    def optimize_mode(self):
+        pass
+
+    def update_replay_memory(self, action, reward):
+        # <s, a, s', r> is a tuple. We omit s and s' since these are always the initial state
+        self.replay_memory.push((action, reward))
+
+        self.optimize_model()
 
     def get_action(self):
         rnd = random()
