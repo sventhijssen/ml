@@ -62,7 +62,7 @@ class DQNPlayer:
 
     def update_replay_memory(self, action, reward):
         # <s, a, s', r> is a tuple. We omit s and s' since these are always the initial state
-        self.replay_memory.push(('action', action, 'reward', reward))
+        self.replay_memory.push(action, reward)
 
         if len(self.replay_memory) > self.replay_memory_size:
             batch = self.replay_memory.sample(self.batch_size)
@@ -84,9 +84,11 @@ class DQNPlayer:
     def get_action(self):
         rnd = random()
         if rnd > self.epsilon:  # Select random action
-            return randint(0, self.nr_actions)
+            print("rnd")
+            return randint(0, self.nr_actions-1)
         else:
+            print("calc")
             q_table_row = []
             for i in range(len(self.actions)):
-                q_table_row[i] = self.model.predict(self.actions[i])
+                q_table_row[i] = self.model.predict(np.transpose(self.actions[i]))
             return np.argmax(q_table_row)  # Return action with maximum reward outcome
