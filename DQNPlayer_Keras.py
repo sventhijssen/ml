@@ -50,7 +50,7 @@ class DQNPlayer:
         self.nr_actions = nr_actions
 
         self.model = Sequential()
-        self.model.add(Dense(nr_actions, input_shape=(nr_actions, ), activation='relu'))
+        self.model.add(Dense(nr_actions, input_shape=(1, ), activation='relu'))
         self.model.add(Dense(nr_actions, activation='relu'))
         self.model.add(Dense(1, activation='sigmoid'))
 
@@ -89,6 +89,6 @@ class DQNPlayer:
         else:
             print("calc")
             q_table_row = []
-            for i in range(len(self.actions)):
-                q_table_row[i] = self.model.predict(np.transpose(self.actions[i]))
+            for action in self.actions:
+                q_table_row.append(self.model.predict(action))
             return np.argmax(q_table_row)  # Return action with maximum reward outcome
