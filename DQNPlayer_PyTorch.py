@@ -65,6 +65,7 @@ class DQNPlayer:
         self.nr_actions = nr_actions
         self.net = Net(nr_actions, nr_actions, 1)
         self.epsilon = 0.1
+        self.discount = 0.9
         self.replay_memory_size = 100
         self.replay_memory = ReplayMemory(self.replay_memory_size)
         self.batch_size = 20
@@ -76,7 +77,30 @@ class DQNPlayer:
         # <s, a, s', r> is a tuple. We omit s and s' since these are always the initial state
         self.replay_memory.push((action, reward))
 
-        self.optimize_model()
+        if len(self.replay_memory) > self.replay_memory_size:
+            batch = self.replay_memory.sample(self.batch_size)
+            training_x_data = []
+            training_y_data = []
+
+            for b in batch:
+                q_table_row = []
+                for i in range(self.nr_actions):
+                    input_state_action = None  # TODO: What is this?
+                    input_state_action[0] = 1  # TODO: again what?
+
+                    q_table_row[i] = self.net.forward(input_state_action)
+
+                updated_q_value = reward + self.discount * max(q_table_row)
+
+                training_x_data.append(None) #TODO
+                training_y_data.append(None) #TODO
+
+            # TODO: Train data somehow
+            optimizer.zero_grad()  # Intialize the hidden weight to all zeros
+            outputs = net(images)  # Forward pass: compute the output class given a image
+            loss = criterion(training_x_data, training_y_data)  # Compute the loss: difference between the output class and the pre-given label
+            loss.backward()  # Backward pass: compute the weight
+            optimizer.step()
 
     def get_action(self):
         rnd = random()

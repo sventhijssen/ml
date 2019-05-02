@@ -1,7 +1,7 @@
 from matplotlib.pyplot import show, subplots, axis, savefig, figure
 from numpy import meshgrid, array, arange, zeros, matrix
 
-from DQNPlayer import DQNPlayer
+from DQNPlayer_Keras import DQNPlayer
 from Dynamics import Dynamics
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
@@ -89,7 +89,7 @@ def opponent_modelling(environment):
     player_two = DQNPlayer()
 
     for k in range(nr_episodes):
-        action_one = player_one.get_action()  # TODO: Convert vector to number, e.g. [0, 0, 1] -> 2
+        action_one = player_one.get_action()
         action_two = player_two.get_action()
 
         environment.set_action_player_one(action_one)
