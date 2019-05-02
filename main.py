@@ -195,20 +195,8 @@ def trajectory_learning(environment):
 
 
 def opponent_modelling(environment):
-    # prob_one = []
-    # prob_two = []
-    #
-    # for k in range(nr_episodes):
-    #     environment.set_action_player_one(player_one.get_action(k))
-    #     environment.set_action_player_two(player_two.get_action(k))
-    #
-    #     player_one.update_q_table(environment.get_action_player_one(), environment.get_reward_player_one())
-    #     player_two.update_q_table(environment.get_action_player_two(), environment.get_reward_player_two())
-    #
-    #     prob_one.append(player_one.get_probability_action(0, k))
-    #     prob_two.append(player_two.get_probability_action(0, k))
-    #
-    # return player_one.get_q_table(), player_two.get_q_table(), prob_one, prob_two
+    #prob_one = []
+    #prob_two = []
 
     nr_episodes = 1000
 
@@ -219,6 +207,11 @@ def opponent_modelling(environment):
         action_one = player_one.get_action()
         action_two = player_two.get_action()
 
+        print("Game " + str(k))
+        print("P1: "+ str(action_one))
+        print("P2: " + str(action_two))
+        print()
+
         environment.set_action_player_one(action_one)
         environment.set_action_player_two(action_two)
 
@@ -227,6 +220,15 @@ def opponent_modelling(environment):
 
         player_one.update_replay_memory(action_one, reward_one)
         player_two.update_replay_memory(action_two, reward_two)
+
+        #prob_one.append(player_one.get_probability_action(0, k))
+        #prob_two.append(player_two.get_probability_action(0, k))
+
+    # figure, tax = ternary.figure()
+    # tax.plot(prob_one[:], linewidth=2.0, label="Curve")
+    # tax.boundary()
+    # tax.show()
+    # figure.savefig(environment.get_name() + "_opponent")
 
 
 def fictitious_play(environment):

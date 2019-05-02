@@ -1,11 +1,10 @@
 from collections import namedtuple
-from random import random
+from random import randint, random
 
 from keras.models import Sequential
 from keras.layers import Dense
 
-from numpy import np
-# fix random seed for reproducibility
+import numpy as np
 
 ##########
 # README #
@@ -16,15 +15,6 @@ from numpy import np
 # - https://www.practicalai.io/teaching-a-neural-network-to-play-a-game-with-q-learning/
 
 
-class Net:
-    def __init__(self, input_size, hidden_size, num_classes):
-        self.model = Sequential()
-        self.model.add(Dense(input_size, input_dim=input_size, activation='relu'))
-        self.model.add(Dense(hidden_size, activation='relu'))
-        self.model.add(Dense(num_classes, activation='sigmoid'))
-
-# Source: https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html
-# Transition = namedtuple('Transition', ('state', 'action', 'next_state', 'reward'))
 Transition = namedtuple('Transition', ('action', 'reward'))
 
 
@@ -60,7 +50,7 @@ class DQNPlayer:
         self.nr_actions = nr_actions
 
         self.model = Sequential()
-        self.model.add(Dense(nr_actions, input_dim=nr_actions, activation='relu'))
+        self.model.add(Dense(nr_actions, input_shape=(nr_actions, ), activation='relu'))
         self.model.add(Dense(nr_actions, activation='relu'))
         self.model.add(Dense(1, activation='sigmoid'))
 
@@ -70,12 +60,9 @@ class DQNPlayer:
         self.replay_memory = ReplayMemory(self.replay_memory_size)
         self.batch_size = 20
 
-    def optimize_model(self):
-        pass
-
     def update_replay_memory(self, action, reward):
         # <s, a, s', r> is a tuple. We omit s and s' since these are always the initial state
-        self.replay_memory.push((action, reward))
+        self.replay_memory.push(('action', action, 'reward', reward))
 
         if len(self.replay_memory) > self.replay_memory_size:
             batch = self.replay_memory.sample(self.batch_size)
@@ -97,7 +84,7 @@ class DQNPlayer:
     def get_action(self):
         rnd = random()
         if rnd > self.epsilon:  # Select random action
-            return random.randint(0, self.nr_actions)
+            return randint(0, self.nr_actions)
         else:
             q_table_row = []
             for i in range(len(self.actions)):
