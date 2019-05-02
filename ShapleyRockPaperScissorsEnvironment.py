@@ -1,20 +1,20 @@
 """
-The rock paper scissors environment.
+The Shapley rock paper scissors environment.
 """
-class RockPaperScissorsEnvironment:
+class ShapleyRockPaperScissorsEnvironment:
 
     #TODO: Make payoff matrix 1 table and use transpose
     def __init__(self):
         self.action_player_one = 0
         self.action_player_two = 0
-        self.payoff_matrix_a = [[0, -1, 1],[1, 0, -1],[-1, 1, 0]]
-        self.payoff_matrix_b = [[0, 1, -1],[-1, 0, 1],[1, -1, 0]]
-        self.starting_points = [(0.6, 0.2, 0.2), (0.2, 0.6, 0.2), (0.2, 0.2, 0.6),]# (0.3, 0.1, 0.6), (0.4, 0.1, 0.5), (0.5, 0.1, 0.4), (0.6, 0.1, 0.3), (0.7, 0.1, 0.2), (0.8, 0.1, 0.1), (0.9, 0.1, 0)]
+        self.payoff_matrix_a = [[0, 1, 0],[0, 0, 1],[1, 0, 0]]
+        self.payoff_matrix_b = [[0, 0, 1],[1, 0, 0],[0, 1, 0]]
+        self.starting_points = [(0.6, 0.2, 0.2), (0.2, 0.6, 0.2), (0.2, 0.2, 0.6)]
         self.starting_points_two = self.starting_points
 
     @staticmethod
     def get_name():
-        return "rock_paper_scissors"
+        return "shapley_rock_paper_scissors"
 
     @staticmethod
     def get_first_action_name():

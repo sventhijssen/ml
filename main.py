@@ -1,4 +1,5 @@
 import ternary
+import numpy as np
 from matplotlib.pyplot import show, subplots, axis, savefig, figure, plot as plt
 from numpy import meshgrid, array, arange, zeros, matrix, linspace, any
 import math
@@ -12,6 +13,7 @@ from Player import Player
 import pylab as p
 
 from RockPaperScissorsEnvironment import RockPaperScissorsEnvironment
+from ShapleyRockPaperScissorsEnvironment import ShapleyRockPaperScissorsEnvironment
 from TernaryDynamics import TernaryDynamics
 
 
@@ -193,10 +195,7 @@ def trajectory_learning(environment):
     figure.savefig(environment.get_name() + "_trajectory")
 
 
-def fictitious_play(environment):
-    player_one = FictitiousPlayer()
-    player_two = FictitiousPlayer()
-
+def fictitious_play(environment, player_one, player_two):
     nr_stages = 10000
 
     # initial strategy is [1,0,0] for both players
@@ -214,15 +213,36 @@ def fictitious_play(environment):
         prob_one.append(player_one.get_probabilities())
         prob_two.append(player_two.get_probabilities())
 
-    print(player_one.get_probabilities())
-    print(player_two.get_probabilities())
 
+    #figure, tax = ternary.figure()
+    #tax.plot(prob_one[:], linewidth=2.0, label="Curve")
+
+    #tax.boundary()
+    #tax.show()
+    #figure.savefig(environment.get_name() + "_fictitious_trajectory")
+    return prob_one, prob_two
+
+def trajectory_learning_fictitious(environment,shapley):
     figure, tax = ternary.figure()
-    tax.plot(prob_one[:], linewidth=2.0, label="Curve")
+    for i in range(len(environment.starting_points)):
+        player_one = FictitiousPlayer()
+        player_two = FictitiousPlayer()
+        player_one.set_probabilities(environment.starting_points[i])
+        player_two.set_probabilities(environment.starting_points_two[i])
+        if(shapley):
+            player_one.set_visits(np.array([1,0,0]))
+            player_two.set_visits(np.array([0,1,0]))
+            player_one.set_stages(1)
+            player_two.set_stages(1)
+
+        prob_one, prob_two\
+            = fictitious_play(environment, player_one, player_two)
+        print(prob_one)
+        tax.plot(prob_one[:], linewidth=3, label="Curve")
 
     tax.boundary()
     tax.show()
-    figure.savefig(environment.get_name() + "_fictitious_trajectory")
+    figure.savefig(environment.get_name() + "_trajectory_fictitious")
 
 
 def main():
@@ -241,8 +261,10 @@ def main():
     rpse = RockPaperScissorsEnvironment()
     #dynamics_learning_ternary(rpse)
     #trajectory_learning(rpse)
-    fictitious_play(rpse)
-
+    trajectory_learning_fictitious(rpse,False)
+    print("Shapley's Rock Paper Scissors Environment")
+    srpse = ShapleyRockPaperScissorsEnvironment()
+    trajectory_learning_fictitious(srpse,True)
 
 if __name__ == "__main__":
     main()
