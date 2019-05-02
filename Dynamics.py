@@ -6,6 +6,8 @@ class Dynamics:
     def __init__(self, environment):
         self.environment = environment
 
+    #TODO: Make adaptive to number of actions
+    #TODO: Do not switch on player(?)
     def get_change(self, x, y, player):
         # print("(" + str(x) + ", " + str(y) + ")")
         if player == 0:
@@ -14,7 +16,7 @@ class Dynamics:
             payoff_matrix = np.array(self.environment.get_payoff_matrix(player))
             a = np.dot(x_vec, payoff_matrix)
             c = np.dot(a, np.transpose(y_vec))
-            b = payoff_matrix[0][0] * y_vec[0] + payoff_matrix[0][1] * y_vec[1]
+            b = np.dot(payoff_matrix, np.transpose(y_vec))[0]
             r = x_vec[0]*(b - c)
         else:
             x_vec = np.array([x, 1-x])
