@@ -82,32 +82,24 @@ class DQNPlayer:
             training_x_data = []
             training_y_data = []
 
-            for b in batch:
+            for m in batch:
                 q_table_row = []
                 for i in range(self.nr_actions):
-                    input_state_action = None  # TODO: What is this?
-                    input_state_action[0] = 1  # TODO: again what?
+                    q_table_row[i] = self.model.predict(self.actions[i])
 
-                    q_table_row[i] = self.net.forward(input_state_action)
+                updated_q_value = m.reward + self.discount * max(q_table_row)
 
-                updated_q_value = reward + self.discount * max(q_table_row)
+                training_x_data.append(m.action)
+                training_y_data.append(updated_q_value)
 
-                training_x_data.append(None) #TODO
-                training_y_data.append(None) #TODO
-
-            # TODO: Train data somehow
-            optimizer.zero_grad()  # Intialize the hidden weight to all zeros
-            outputs = net(images)  # Forward pass: compute the output class given a image
-            loss = criterion(training_x_data, training_y_data)  # Compute the loss: difference between the output class and the pre-given label
-            loss.backward()  # Backward pass: compute the weight
-            optimizer.step()
+            self.model.fit(training_x_data, training_y_data)
 
     def get_action(self):
         rnd = random()
         if rnd > self.epsilon:  # Select random action
             return random.randint(0, self.nr_actions)
         else:
-            q_values = []
+            q_table_row = []
             for i in range(len(self.actions)):
-                q_values[i] = self.model.predict(self.actions[i])
-            return np.argmax(q_values)  # Return action with maximum reward outcome
+                q_table_row[i] = self.model.predict(self.actions[i])
+            return np.argmax(q_table_row)  # Return action with maximum reward outcome

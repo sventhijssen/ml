@@ -102,10 +102,6 @@ def opponent_modelling(environment):
         player_two.update_replay_memory(action_two, reward_two)
 
 
-
-
-
-
 def main():
 
     print("Matching Pennies Environment")
