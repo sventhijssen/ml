@@ -1,5 +1,6 @@
 from collections import namedtuple
-from random import randint, random
+
+import random as rnd
 
 from keras.models import Sequential
 from keras.layers import Dense
@@ -23,17 +24,18 @@ class ReplayMemory(object):
     def __init__(self, capacity):
         self.capacity = capacity
         self.memory = []
-        self.position = 0
+        # self.position = 0
 
     def push(self, *args):
         """Saves a transition."""
-        if len(self.memory) < self.capacity:
-            self.memory.append(None)
-        self.memory[self.position] = Transition(*args)
-        self.position = (self.position + 1) % self.capacity
+        # if len(self.memory) < self.capacity:
+        #     self.memory.append(None)
+        # self.memory[self.position] = Transition(*args)
+        # self.position = (self.position + 1) % self.capacity
+        self.memory.append(Transition(*args))
 
     def sample(self, batch_size):
-        return random.sample(self.memory, batch_size)
+        return rnd.sample(self.memory, batch_size)
 
     def __len__(self):
         return len(self.memory)
@@ -50,9 +52,11 @@ class DQNPlayer:
         self.nr_actions = nr_actions
 
         self.model = Sequential()
-        self.model.add(Dense(nr_actions, input_shape=(1, ), activation='relu'))
-        self.model.add(Dense(nr_actions, activation='relu'))
+        self.model.add(Dense(nr_actions, input_dim=1, activation='relu'))
+        #self.model.add(Dense(nr_actions, activation='relu'))
         self.model.add(Dense(1, activation='sigmoid'))
+
+        self.model.compile(optimizer='adam', loss='mse')
 
         self.epsilon = 0.1
         self.discount = 0.9
@@ -71,8 +75,8 @@ class DQNPlayer:
 
             for m in batch:
                 q_table_row = []
-                for i in range(self.nr_actions):
-                    q_table_row[i] = self.model.predict(self.actions[i])
+                for action in self.actions:
+                    q_table_row.append(self.model.predict(np.transpose(action)))
 
                 updated_q_value = m.reward + self.discount * max(q_table_row)
 
@@ -82,13 +86,11 @@ class DQNPlayer:
             self.model.fit(training_x_data, training_y_data)
 
     def get_action(self):
-        rnd = random()
-        if rnd > self.epsilon:  # Select random action
-            print("rnd")
-            return randint(0, self.nr_actions-1)
+        if rnd.random() > self.epsilon:  # Select random action
+            return rnd.randint(0, self.nr_actions-1)
         else:
-            print("calc")
             q_table_row = []
             for action in self.actions:
                 q_table_row.append(self.model.predict(action))
+            print(q_table_row)
             return np.argmax(q_table_row)  # Return action with maximum reward outcome
