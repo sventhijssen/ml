@@ -17,7 +17,7 @@ class QFictitiousPlayer:
     def update_q_table(self, action, opp_action, reward):
         self.nr_stages += 1
         self.visits[action,opp_action] += 1
-        self.q_table[action,opp_action] += 0.0001 * (reward - self.q_table[action,opp_action])
+        self.q_table[action,opp_action] += 0.001 * (reward - self.q_table[action,opp_action])
         self.probabilities = self.visits / self.nr_stages
 
     def get_q_table(self):
@@ -75,3 +75,6 @@ class QFictitiousPlayer:
         return ((self.q_table[action,0] * self.probabilities[action,0])
             + (self.q_table[action,1] * self.probabilities[action,1]) +
             (self.q_table[action,2] * self.probabilities[action,2]))
+
+    def exp_prob(self,action):
+        return (self.get_expected_value(action)/(self.get_expected_value(0)+self.get_expected_value(1)+self.get_expected_value(2)))

@@ -4,6 +4,7 @@ from matplotlib.pyplot import show, subplots, axis, savefig, figure, plot as plt
 from numpy import meshgrid, array, arange, zeros, matrix, linspace, any
 import math
 import matplotlib.pyplot as plt
+from random import random
 
 from Dynamics import Dynamics
 from FictitiousPlayer import FictitiousPlayer
@@ -224,17 +225,21 @@ def trajectory_learning_combined(environment):
     # f = p.figure()
     # p.axis([0, 1, 0, 1])
     figure, tax = ternary.figure()
-    for i in range(len(environment.starting_points)):
+    for i in range(len(environment.starting_points_combined)):
         player_one = QFictitiousPlayer(3)
         player_two = QFictitiousPlayer(3)
-        one = np.zeros(shape=(3,3))
-        two = np.zeros(shape=(3,3))
-        for k in range(0,2):
-            for j in range(0,2):
-                one[k][j] = environment.starting_points[i][j]
-                two[k][j] = environment.starting_points[i][j]
-        player_one.set_q_table(one)
-        player_two.set_q_table(two)
+        #one = np.zeros(shape=(3,3))
+        #two = np.zeros(shape=(3,3))
+        #for k in range(0,3):
+        #    for j in range(0,3):
+        #        one[k][j] = random() #environment.starting_points[i][j]
+        #        two[k][j] = random() #environment.starting_points[i][j]
+        #player_one.set_q_table(one)
+        #player_two.set_q_table(two)
+        player_one.set_q_table(environment.starting_points_combined[i])
+        print(player_one.get_q_table())
+        player_two.set_q_table(environment.starting_points_combined[i])
+        print(player_two.get_q_table())
 
         q_table_two, q_table_two, prob_one, prob_two\
             = combined_learning(environment, player_one, player_two)
