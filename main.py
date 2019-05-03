@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 
 from Dynamics import Dynamics
 from FictitiousPlayer import FictitiousPlayer
+from QFictitiousPlayer import QFictitiousPlayer
 from MatchingPenniesEnvironment import MatchingPenniesEnvironment
 from PrisonersDilemmaEnvironment import PrisonersDilemmaEnvironment
 from Player import Player
@@ -42,7 +43,6 @@ def independent_learning(environment, player_one, player_two):
         )
 
     return player_one.get_q_table(), player_two.get_q_table(), prob_one, prob_two
-
 
 def dynamics_learning(environment):
     # DYNAMICS
@@ -194,6 +194,56 @@ def trajectory_learning(environment):
     tax.show()
     figure.savefig(environment.get_name() + "_trajectory")
 
+def combined_learning(environment, player_one, player_two):
+        nr_episodes = 100000
+
+        prob_one = []
+        prob_two = []
+
+        for k in range(nr_episodes):
+            environment.set_action_player_one(player_one.get_action(k))
+            environment.set_action_player_two(player_two.get_action(k))
+
+            player_one.update_q_table(environment.get_action_player_one(),environment.get_action_player_two(), environment.get_reward_player_one())
+            player_two.update_q_table(environment.get_action_player_two(),environment.get_action_player_one(), environment.get_reward_player_two())
+
+            prob_one.append(
+                [player_one.get_probability_action(0),
+                 player_one.get_probability_action(1),
+                 player_one.get_probability_action(2)]
+            )
+            prob_two.append(
+                [player_two.get_probability_action(0),
+                 player_two.get_probability_action(1),
+                 player_two.get_probability_action(2)]
+            )
+
+        return player_one.get_q_table(), player_two.get_q_table(), prob_one, prob_two
+
+def trajectory_learning_combined(environment):
+    # f = p.figure()
+    # p.axis([0, 1, 0, 1])
+    figure, tax = ternary.figure()
+    for i in range(len(environment.starting_points)):
+        player_one = QFictitiousPlayer(3)
+        player_two = QFictitiousPlayer(3)
+        one = np.zeros(shape=(3,3))
+        two = np.zeros(shape=(3,3))
+        for k in range(0,2):
+            for j in range(0,2):
+                one[k][j] = environment.starting_points[i][j]
+                two[k][j] = environment.starting_points[i][j]
+        player_one.set_q_table(one)
+        player_two.set_q_table(two)
+
+        q_table_two, q_table_two, prob_one, prob_two\
+            = combined_learning(environment, player_one, player_two)
+        # p.plot(prob_one[:], prob_two[:], color='black')
+        tax.plot(prob_one[:], linewidth=2.0, label="Curve")
+
+    tax.boundary()
+    tax.show()
+    figure.savefig(environment.get_name() + "_trajectory_combined")
 
 def fictitious_play(environment, player_one, player_two):
     nr_stages = 10000
@@ -221,6 +271,8 @@ def fictitious_play(environment, player_one, player_two):
     #tax.show()
     #figure.savefig(environment.get_name() + "_fictitious_trajectory")
     return prob_one, prob_two
+
+
 
 def trajectory_learning_fictitious(environment,shapley):
     figure, tax = ternary.figure()
@@ -261,10 +313,13 @@ def main():
     rpse = RockPaperScissorsEnvironment()
     #dynamics_learning_ternary(rpse)
     #trajectory_learning(rpse)
-    trajectory_learning_fictitious(rpse,False)
-    print("Shapley's Rock Paper Scissors Environment")
-    srpse = ShapleyRockPaperScissorsEnvironment()
-    trajectory_learning_fictitious(srpse,True)
+    #trajectory_learning_fictitious(rpse,False)
+    #print("Shapley's Rock Paper Scissors Environment")
+    #srpse = ShapleyRockPaperScissorsEnvironment()
+    #trajectory_learning_fictitious(srpse,True)
+
+    print("Combined Fictitious and Q-Learning in Rock Paper Scissors Environment")
+    trajectory_learning_combined(rpse,)
 
 if __name__ == "__main__":
     main()
