@@ -6,10 +6,7 @@ class Dynamics:
     def __init__(self, environment):
         self.environment = environment
 
-    #TODO: Make adaptive to number of actions
-    #TODO: Do not switch on player(?)
     def get_change(self, x, y, player):
-        # print("(" + str(x) + ", " + str(y) + ")")
         if player == 0:
             x_vec = np.array([x, 1-x])
             y_vec = np.array([y, 1-y])

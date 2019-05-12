@@ -20,7 +20,7 @@ from TernaryDynamics import TernaryDynamics
 
 
 def independent_learning(environment, player_one, player_two):
-    nr_episodes = 100000
+    nr_episodes = 50000
 
     prob_one = []
     prob_two = []
@@ -120,62 +120,14 @@ def dynamics_learning_ternary(environment):
 
     savefig(environment.get_name() + "_field")
 
-    #TODO: make combinations for the same strategies for player A and player B
-
     figure, tax = ternary.figure()
     tax.scatter(strategies, marker='s', color='red', label="Red Squares")
-    #tax.plot(plot_results, linewidth=2.0, label="Curve")
-    #tax.scatter(plot_results, marker='s', color='blue', label="Blue Squares")
-    # tax.plot(xs, marker='s', color='blue', label="Player X")
-    # tax.plot(ys, marker='s', color='red', label="Player Y")
-    #X, Y = meshgrid(xs_mesh, xs_mesh)
-    #ax.streamplot(X, Y, array(results), array(results))
-
-    # that is a lot!
-    #tax.scatter(results, marker='s', color='blue')
-
-    # we should not plot as scatter, but as curve
-    #still rubbish results
-    #tax.plot(results, linewidth=2.0, label="Curve")
-
+    tax.right_corner_label("R", fontsize=12)
+    tax.top_corner_label("P", fontsize=12)
+    tax.left_corner_label("S", fontsize=12)
     tax.show()
 
-
-
-    # # arange(start, stop, step)
-    # xs_mesh, ys_mesh = meshgrid(3, 3)
-    #
-    # us = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 0))
-    # #vs = array(dynamics.get_mesh_dynamics(xs_mesh, ys_mesh, 1))
-    # # zs_mesh = ys_mesh - xs_mesh
-    #
-    # # fig, ax = subplots()
-    # # ax.quiver(xs_mesh, ys_mesh, us, vs)
-    # # axis('equal')
-    # #
-    # # savefig(environment.get_name() + "_field")
-    #
-    # ## Sample trajectory plot
-    # figure, tax = ternary.figure(scale=1.0)
-    # figure.set_size_inches(5, 5)
-    #
-    # tax.boundary()
-    # tax.gridlines(multiple=0.2, color="black")
-    # tax.set_title("Plotting of sample trajectory data", fontsize=10)
-    #
-    # # Plot the data
-    # tax.plot(us, linewidth=2.0, label="Curve")
-    # tax.ticks(axis='lbr', multiple=0.2, linewidth=1, tick_formats="%.1f", offset=0.02)
-    #
-    # tax.get_axes().axis('off')
-    # tax.clear_matplotlib_ticks()
-    # tax.legend()
-    # tax.show()
-
-
 def trajectory_learning(environment):
-    # f = p.figure()
-    # p.axis([0, 1, 0, 1])
     figure, tax = ternary.figure()
     for i in range(len(environment.starting_points)):
         player_one = Player(3)
@@ -188,15 +140,15 @@ def trajectory_learning(environment):
         # p.plot(prob_one[:], prob_two[:], color='black')
         tax.plot(prob_one[:], linewidth=2.0, label="Curve")
 
-    # p.xlabel('Player 1, probability of playing ' + environment.get_first_action_name())
-    # p.ylabel('Player 2, probability of playing ' + environment.get_first_action_name())
-    # f.savefig(environment.get_name() + "_trajectory")
     tax.boundary()
+    tax.right_corner_label("R", fontsize=12)
+    tax.top_corner_label("P", fontsize=12)
+    tax.left_corner_label("S", fontsize=12)
     tax.show()
     figure.savefig(environment.get_name() + "_trajectory")
 
 def combined_learning(environment, player_one, player_two):
-        nr_episodes = 100000
+        nr_episodes = 10000
 
         prob_one = []
         prob_two = []
@@ -221,25 +173,25 @@ def combined_learning(environment, player_one, player_two):
 
         return player_one.get_q_table(), player_two.get_q_table(), prob_one, prob_two
 
-def trajectory_learning_combined(environment):
+def trajectory_learning_combined(environment, shapley):
     # f = p.figure()
     # p.axis([0, 1, 0, 1])
     figure, tax = ternary.figure()
     for i in range(len(environment.starting_points_combined)):
         player_one = QFictitiousPlayer(3)
         player_two = QFictitiousPlayer(3)
-        #one = np.zeros(shape=(3,3))
-        #two = np.zeros(shape=(3,3))
-        #for k in range(0,3):
-        #    for j in range(0,3):
-        #        one[k][j] = random() #environment.starting_points[i][j]
-        #        two[k][j] = random() #environment.starting_points[i][j]
-        #player_one.set_q_table(one)
-        #player_two.set_q_table(two)
         player_one.set_q_table(environment.starting_points_combined[i])
         print(player_one.get_q_table())
         player_two.set_q_table(environment.starting_points_combined[i])
         print(player_two.get_q_table())
+        if (shapley):
+            vis1, vis2 = np.zeros(shape=(3, 3)),np.zeros(shape=(3, 3))
+            vis1[0,0] = 1
+            player_one.set_visits(vis1)
+            vis2[1,1] = 1
+            player_two.set_visits(vis2)
+            player_one.set_stages(1)
+            player_two.set_stages(1)
 
         q_table_two, q_table_two, prob_one, prob_two\
             = combined_learning(environment, player_one, player_two)
@@ -247,11 +199,15 @@ def trajectory_learning_combined(environment):
         tax.plot(prob_one[:], linewidth=2.0, label="Curve")
 
     tax.boundary()
+    tax.right_corner_label("R", fontsize=12)
+    tax.top_corner_label("P", fontsize=12)
+    tax.left_corner_label("S", fontsize=12)
+
     tax.show()
     figure.savefig(environment.get_name() + "_trajectory_combined")
 
 def fictitious_play(environment, player_one, player_two):
-    nr_stages = 10000
+    nr_stages = 1000
 
     # initial strategy is [1,0,0] for both players
 
@@ -268,16 +224,7 @@ def fictitious_play(environment, player_one, player_two):
         prob_one.append(player_one.get_probabilities())
         prob_two.append(player_two.get_probabilities())
 
-
-    #figure, tax = ternary.figure()
-    #tax.plot(prob_one[:], linewidth=2.0, label="Curve")
-
-    #tax.boundary()
-    #tax.show()
-    #figure.savefig(environment.get_name() + "_fictitious_trajectory")
     return prob_one, prob_two
-
-
 
 def trajectory_learning_fictitious(environment,shapley):
     figure, tax = ternary.figure()
@@ -298,6 +245,9 @@ def trajectory_learning_fictitious(environment,shapley):
         tax.plot(prob_one[:], linewidth=3, label="Curve")
 
     tax.boundary()
+    tax.right_corner_label("R", fontsize=12)
+    tax.top_corner_label("P", fontsize=12)
+    tax.left_corner_label("S", fontsize=12)
     tax.show()
     figure.savefig(environment.get_name() + "_trajectory_fictitious")
 
@@ -314,17 +264,21 @@ def main():
     # dynamics_learning(pde)
     # trajectory_learning(pde)
 
-    print("Rock Paper Scissors Environment")
     rpse = RockPaperScissorsEnvironment()
-    #dynamics_learning_ternary(rpse)
-    #trajectory_learning(rpse)
-    #trajectory_learning_fictitious(rpse,False)
-    #print("Shapley's Rock Paper Scissors Environment")
-    #srpse = ShapleyRockPaperScissorsEnvironment()
-    #trajectory_learning_fictitious(srpse,True)
+    print("Dynamics in Rock Paper Scissors Environment")
+    dynamics_learning_ternary(rpse)
+    print("Q-Learning in Rock Paper Scissors Environment")
+    trajectory_learning(rpse)
+    print("Fictitious Learning in Rock Paper Scissors Environment")
+    trajectory_learning_fictitious(rpse,False)
+    print("Fictitious Learning in Shapley's Rock Paper Scissors Environment")
+    srpse = ShapleyRockPaperScissorsEnvironment()
+    trajectory_learning_fictitious(srpse,True)
 
     print("Combined Fictitious and Q-Learning in Rock Paper Scissors Environment")
-    trajectory_learning_combined(rpse,)
+    trajectory_learning_combined(rpse,False)
+    print("Combined Fictitious and Q-Learning in Shapley's Rock Paper Scissors Environment")
+    trajectory_learning_combined(srpse,True)
 
 if __name__ == "__main__":
     main()

@@ -1,5 +1,4 @@
 import random
-
 import numpy as np
 
 """
@@ -24,13 +23,6 @@ class Player:
 
     def get_action(self, k):
         rnd = random.random()
-        # if rnd < self.get_probability_action(0, k):
-        #     return 0
-        # return 1
-        # if rnd > self.epsilon/(k+1):
-        #     return np.argmax(self.q_table[:])
-        # else:
-        #     return random.choice([0, 1])
         c = self.cumsum()
         for i in range(len(c)):
             if c[i] >= rnd:
@@ -43,10 +35,6 @@ class Player:
             c.append(c[i-1] + self.get_probability_action(i,0))
         return c
 
-    def get_probability_action(self,action,k):
+    def get_probability_action(self, action, k):
         temp = 0.1
         return (np.exp(self.q_table[action]/temp))/(np.exp(self.q_table[0]/temp) + np.exp(self.q_table[1]/temp) + np.exp(self.q_table[2]/temp))
-        # prob = (1-self.epsilon/(k+1))*0.5
-        # if self.q_table[action] > self.q_table[self.other_action(action)]:
-        #     prob += (self.epsilon/(k+1))
-        # return prob

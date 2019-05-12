@@ -1,9 +1,9 @@
+import numpy as np
 """
 The Shapley rock paper scissors environment.
 """
 class ShapleyRockPaperScissorsEnvironment:
 
-    #TODO: Make payoff matrix 1 table and use transpose
     def __init__(self):
         self.action_player_one = 0
         self.action_player_two = 0
@@ -11,6 +11,15 @@ class ShapleyRockPaperScissorsEnvironment:
         self.payoff_matrix_b = [[0, 0, 1],[1, 0, 0],[0, 1, 0]]
         self.starting_points = [(0.6, 0.2, 0.2), (0.2, 0.6, 0.2), (0.2, 0.2, 0.6)]
         self.starting_points_two = self.starting_points
+        self.starting_points_combined = [np.array([[0.6,0.6,0.6],
+                                                   [0.2,0.2,0.2],
+                                                   [0.2,0.2,0.2]]),
+                                         np.array([[0.2,0.2,0.2],
+                                                   [0.6,0.6,0.6],
+                                                   [0.2,0.2,0.2]]),
+                                         np.array([[0.2,0.2,0.2],
+                                                   [0.2,0.2,0.2],
+                                                   [0.6,0.6,0.6]])]
 
     @staticmethod
     def get_name():

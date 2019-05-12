@@ -1,6 +1,7 @@
 import numpy as np
-
-
+"""
+Calculate dynamics for ternary games.
+"""
 class TernaryDynamics:
 
     def __init__(self, environment):
@@ -11,7 +12,6 @@ class TernaryDynamics:
         payoff_matrix = np.array(self.environment.get_payoff_matrix(0))
         print("payoff")
         print(payoff_matrix)
-        # r = x * (f_s - f_avg)
         f_s = np.dot(payoff_matrix, x_vec)
         print("fs")
         print(f_s)

@@ -4,7 +4,6 @@ The rock paper scissors environment.
 """
 class RockPaperScissorsEnvironment:
 
-    #TODO: Make payoff matrix 1 table and use transpose
     def __init__(self):
         self.action_player_one = 0
         self.action_player_two = 0
